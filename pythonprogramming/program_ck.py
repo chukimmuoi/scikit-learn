@@ -3,6 +3,15 @@ import os
 import time
 from datetime import datetime
 
+from time import mktime
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import style
+style.use("dark_background")
+
+import re
+import urllib
+
 path = "/Users/chukimmuoi/AI/data/intraQuarter"
 
 
@@ -16,7 +25,9 @@ def Key_Stats(gather="Total Debt/Equity (mrq)"):
                                'Price',
                                'stock_p_change',
                                'SP500',
-                               'sp500_p_change'])
+                               'sp500_p_change',
+                               'Difference',
+                               'Status'])
 
     sp500_df = pd.read_csv("YAHOO-INDEX_GSPC.csv")
 
@@ -74,6 +85,12 @@ def Key_Stats(gather="Total Debt/Equity (mrq)"):
                         value = value[1].split('</td>')
                         if len(value) >= 2:
                             value = value[0]
+                            difference = stock_p_change - sp500_p_change
+                            if difference > 0:
+                                status = "outperform"
+                            else:
+                                status = "underperform"
+
                             df = df.append({'Date': date_stamp,
                                             'Unix': unix_time,
                                             'Ticker': ticker,
@@ -81,9 +98,27 @@ def Key_Stats(gather="Total Debt/Equity (mrq)"):
                                             'Price': stock_price,
                                             'stock_p_change': stock_p_change,
                                             'SP500': sp500_value,
-                                            'sp500_p_change': sp500_p_change}, ignore_index=True)
+                                            'sp500_p_change': sp500_p_change,
+                                            'Difference': difference,
+                                            'Status': status}, ignore_index=True)
                 except Exception as e:
                     pass
+
+    for each_ticker in ticker_list:
+        try:
+            plot_df = df[(df['Ticker'] == each_ticker)]
+            plot_df = plot_df.set_index(['Date'])
+            if plot_df['Status'][-1] == 'underperform':
+                color = 'r'
+            else:
+                color = 'g'
+
+            plot_df['Difference'].plot(label=each_ticker, color=color)
+            plt.legend()
+        except Exception as e:
+            pass
+
+    plt.show()
 
     save = gather.replace(' ', '').replace(')', '').replace('(', '').replace('/', '') + ('.csv')
     print(save)
