@@ -28,6 +28,11 @@ def lol(parent="50KD"):
                                'state',
                                'time_out_wb',
                                'other'])
+    countPass = 0
+    countFail = 0
+    sumTime = 0
+    errorWb = 0
+    errorOther = 0
 
     for each_dir in stock_list[1:]:
         each_file = os.listdir(each_dir)
@@ -59,17 +64,25 @@ def lol(parent="50KD"):
                 other = 0
                 if not endTime:
                     state = "Fail"
+                    countFail += 1
+
                     timeouts = source.split('WB Adjust - timeout')
                     if len(timeouts) >= 2:
+                        errorWb += 1
                         timeOutWb = 1
                     else:
+                        errorOther += 1
                         other = 1
                 else:
                     state = "Pass"
+                    countPass += 1
+
                     startTimes = startTime.split(":")
                     endTimes = endTime.split(":")
                     dis = int(endTimes[0]) * 60 + int(endTimes[1]) - int(startTimes[0]) * 60 - int(startTimes[1])
                     print("dis", dis)
+                    if dis > 0:
+                        sumTime += dis
 
                 df = df.append({'start': startTime,
                                 'end': endTime,
@@ -77,7 +90,11 @@ def lol(parent="50KD"):
                                 'state': state,
                                 'time_out_wb': timeOutWb,
                                 'other': other}, ignore_index=True)
-
+    print("Sum time", sumTime)
+    print("Model: %s: pass: %d(%f percent), fail %d(%f percent), TimeTB %f, Error WB %d(%f percent), Error Other %d(%f percent)" % (
+    parent, countPass, (countPass / (countFail + countPass)) * 100, countFail,
+    (countFail / (countFail + countPass)) * 100, sumTime / countPass, errorWb, (errorWb / (errorWb + errorOther)) * 100,
+    errorOther, (errorOther / (errorWb + errorOther)) * 100))
     save = parent + '.csv'
     df.to_csv(save)
 
