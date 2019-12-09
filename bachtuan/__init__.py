@@ -1,3 +1,5 @@
+#http://blog.asilla.vn/2019/04/06/chan-doan-benh-viem-phoi-bang-tri-tue-nhan-tao-step-by-step/?fbclid=IwAR14uoR5oAfuZ_fnGIH38bzGgygmepMHyhCkUs3gWHxhONImYsEO0tL3Q3o
+
 from keras.layers import Input, Lambda, Dense, Flatten
 from keras.models import Model
 from keras.applications.vgg16 import VGG16
