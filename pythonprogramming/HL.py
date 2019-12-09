@@ -42,7 +42,7 @@ def lol(parent="50KD"):
         if len(each_file) > 0:
             for file in each_file:
                 full_file_path = each_dir + '/' + file
-                print(full_file_path)
+                # print(full_file_path)
                 source = open(full_file_path, 'r', encoding='mac_roman').read()
                 starts = source.split('#### Read RFID ####')
                 startTime = ""
@@ -56,8 +56,8 @@ def lol(parent="50KD"):
                         if len(ends02) >= 2:
                             endTime = ends02[0].replace("[", "").replace("]", "").replace(" ", "").replace("\n", "")
 
-                print("start", startTime)
-                print("end", endTime)
+                # print("start", startTime)
+                # print("end", endTime)
                 dis = 0
                 state = "Fail"
                 timeOutWb = 0
@@ -80,7 +80,7 @@ def lol(parent="50KD"):
                     startTimes = startTime.split(":")
                     endTimes = endTime.split(":")
                     dis = int(endTimes[0]) * 60 + int(endTimes[1]) - int(startTimes[0]) * 60 - int(startTimes[1])
-                    print("dis", dis)
+                    # print("dis", dis)
                     if dis > 0:
                         sumTime += dis
 
@@ -90,8 +90,8 @@ def lol(parent="50KD"):
                                 'state': state,
                                 'time_out_wb': timeOutWb,
                                 'other': other}, ignore_index=True)
-    print("Sum time", sumTime)
-    print("Model: %s: pass: %d(%f percent), fail %d(%f percent), TimeTB %f, Error WB %d(%f percent), Error Other %d(%f percent)" % (
+    # print("Sum time", sumTime)
+    print("Model %s: Pass: %d(%f percent), Fail %d(%f percent), Time TB %f, Error WB %d(%f percent), Error Other %d(%f percent)" % (
     parent, countPass, (countPass / (countFail + countPass)) * 100, countFail,
     (countFail / (countFail + countPass)) * 100, sumTime / countPass, errorWb, (errorWb / (errorWb + errorOther)) * 100,
     errorOther, (errorOther / (errorWb + errorOther)) * 100))
