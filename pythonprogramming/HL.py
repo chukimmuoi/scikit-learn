@@ -16,7 +16,7 @@ import urllib
 path = "/Users/chukimmuoi/Downloads/WB_LOG_1209/"
 
 
-def lol(parent="50KD"):
+def getInfomation(parent="50KD"):
     statspath = path + parent
     stock_list = [x[0] for x in os.walk(statspath)]
 
@@ -80,6 +80,8 @@ def lol(parent="50KD"):
                     startTimes = startTime.split(":")
                     endTimes = endTime.split(":")
                     dis = int(endTimes[0]) * 60 + int(endTimes[1]) - int(startTimes[0]) * 60 - int(startTimes[1])
+                    if dis < 0:
+                        dis = 3600 + dis
                     # print("dis", dis)
                     if dis > 0:
                         sumTime += dis
@@ -99,6 +101,6 @@ def lol(parent="50KD"):
     df.to_csv(save)
 
 
-lol("50KD")
-lol("55KD")
-lol("55KE")
+getInfomation("50KD")
+getInfomation("55KD")
+getInfomation("55KE")
